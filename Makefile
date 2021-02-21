@@ -13,7 +13,7 @@ OBJECTS = $(SOURCES:.c=.o)
 ARCH=arm-linux-gnueabi-
 CC=$(ARCH)gcc
 OBJCOPY=$(ARCH)objcopy
-CFLAGS += -g3 -Wall
+CFLAGS += -g3 -Wall -O2
 #-Tlink.ld
 CFLAGS += -mlittle-endian -mcpu=cortex-m4
 #CFLAGS += -mfloat-abi=hard
@@ -38,3 +38,9 @@ burn: proj
 
 openocd:
 	openocd -f board/stm32f4discovery.cfg -f interface/stlink-v2-1.cfg
+
+$(APP).dis: $(APP).elf
+	$(ARCH)objdump -D $< > $@
+
+reset:
+	stlink-1.5.1/build/Release/st-flash  write reset.bin 0x8000000

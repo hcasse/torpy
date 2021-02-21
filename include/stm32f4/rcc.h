@@ -47,7 +47,7 @@
 #define RCC_PLLCFGR_Q_SET(x, v)		_SET(x, 27, 24, v)
 #define RCC_CFGR		RCC_REG(0x08)
 #define RCC_CFGR_SW_SET(x, v)		_SET(x, 1, 0, v)
-#define RCC_CFGR_SWS_GET(x)			_GET(x, 2, 1)
+#define RCC_CFGR_SWS_GET(x)			_GET(x, 3, 2)
 #define RCC_CFGGR_HPRE_SET(x, v)	_SET(x, 7, 4, v)
 #define RCC_CFGGR_PPRE1_SET(x, v)	_SET(x, 12, 10, v)
 #define RCC_CFGGR_PPRE2_SET(x, v)	_SET(x, 15, 13, v)

@@ -109,12 +109,28 @@ void (* const table_interrupt_vector[256])() = {
 	handler_default		// 60
 };
 
+#define FLASH_BASE	0x40023C00
+#define FLASH_ACR	_IOREG(FLASH_BASE, 0x00)
+#define FLASH_ACR_LATENCY_SET(x, l) _SET(x, 2, 0, l)
+#define FLASH_ACR_DCEN	(1 << 10)
+#define FLASH_ACR_ICEN	(1 << 9)
+
 
 /*** reset handler ***/
 void handler_reset() {
 	uint32_t *p;
 	uint32_t *q;
 	uint32_t x;
+
+
+	// copy data from FLASH to RAM
+	p = &_data_flash;
+	for(q = &_data_begin; q < &_data_end;)
+			*q++ = *p++;
+
+	// set to 0 BSS
+	for(q = &_bss_begin; q < &_bss_end;)
+		*q++ = 0;
 
 	// configure clock
 	// HSE_VALUE <- 8000000 (8MHz - crystial frequency)
@@ -131,12 +147,11 @@ void handler_reset() {
 	// configure HSE clock
 	RCC_CR |= RCC_CR_HSEON;
 	while((RCC_CR & RCC_CR_HSERDY) == 0);
-	//RCC_CFGR_SW_SET(RCC_CFGR, RCC_HSE);
 
 	// configure AHB and AHP[12]
-	RCC_CFGGR_HPRE_SET(RCC_CR, RCC_HPRE_NODIV);
-	RCC_CFGGR_PPRE1_SET(RCC_CR, RCC_PPRE_DIV4);
-	RCC_CFGGR_PPRE2_SET(RCC_CR, RCC_PPRE_DIV2);
+	RCC_CFGGR_HPRE_SET(RCC_CFGR, RCC_HPRE_NODIV);
+	RCC_CFGGR_PPRE1_SET(RCC_CFGR, RCC_PPRE_DIV4);
+	RCC_CFGGR_PPRE2_SET(RCC_CFGR, RCC_PPRE_DIV2);
 
 	// configure PLL
 	RCC_CR &= ~RCC_CR_PLLON;
@@ -150,22 +165,21 @@ void handler_reset() {
 	RCC_CR |= RCC_CR_PLLON;
 	while((RCC_CR & RCC_CR_PLLRDY) == 0);	
 
+	// configure flash
+	x = FLASH_ACR;
+	x |= FLASH_ACR_DCEN;
+	x |= FLASH_ACR_ICEN;
+	FLASH_ACR_LATENCY_SET(x, 5);
+	FLASH_ACR = x;
+	
 	// select PLL as SYSCLK
 	RCC_CFGR_SW_SET(RCC_CFGR, RCC_PLL);
 	while(RCC_CFGR_SWS_GET(RCC_CFGR) != RCC_PLL);
 	RCC_CR &= ~RCC_CR_HSION;
 
-	// copy data from FLASH to RAM
-	p = &_data_flash;
-	for(q = &_data_begin; q < &_data_end;)
-			*q++ = *p++;
-
-	// set to 0 BSS
-	for(q = &_bss_begin; q < &_bss_end;)
-		*q++ = 0;
-
 	// run main
 	main();
+	while(1);
 }
 
 /*** default handler */

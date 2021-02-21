@@ -13,13 +13,40 @@
  *	GNU General Public License for more details.
  */
 
+#include <stm32f4/gpio.h>
+#include <stm32f4/rcc.h>
+
 volatile int n = 10;
 
 int main() {
-	int s = 0;
+	int i;
 
-	for(int i = 0; i < n; i++)
-		s += i;
-	
-	while(1);
+	// set power
+	RCC_AHB1ENR |= 1 << ID_GPIOD;
+
+	// initialize the LEDs
+	//GPIO_MODER_SET(LED_ORANGE, GPIO_MODER_OUT);
+	GPIO_MODER_SET(LED_BLUE, GPIO_MODER_OUT);
+	//GPIO_MODER_SET(LED_RED, GPIO_MODER_OUT);
+	//GPIO_MODER_SET(LED_GREEN, GPIO_MODER_OUT);
+
+	// endless loop
+	while(1) {
+
+		//GPIO_BSRR_SET(LED_ORANGE);
+		//GPIO_BSRR_SET(LED_RED);
+		GPIO_BSRR_RESET(LED_BLUE);
+		//GPIO_BSRR_RESET(LED_GREEN);
+
+		/*for (i = 0; i < 6000000; i++)
+			__asm__("nop");*/
+
+		//GPIO_BSRR_RESET(LED_ORANGE);
+		//GPIO_BSRR_RESET(LED_RED);
+		GPIO_BSRR_SET(LED_BLUE);
+		//GPIO_BSRR_SET(LED_GREEN);
+
+		/*for (i = 0; i < 6000000; i++)
+			__asm__("nop");		*/
+	}
 }
