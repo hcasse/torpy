@@ -18,7 +18,7 @@ CFLAGS += -g3 -Wall
 CFLAGS += -mlittle-endian -mcpu=cortex-m4
 #CFLAGS += -mfloat-abi=hard
 #-mfpu=fpv4-sp-d16
-CFLAGS += -I .
+CFLAGS += -I include
 #CFLAGS += -mthumb -mthumb-interwork
 LDFLAGS = -Tlink.ld -nostartfiles
 

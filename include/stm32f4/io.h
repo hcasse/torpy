@@ -1,5 +1,5 @@
 /**
- *	Torpy - grid-follower wheeling and box delivering bot.
+ * Torpy - grid-follower wheeling and box delivering bot.
  *	Copyright (C) 2021  Université de Toulouse <casse@irit.fr>
  *
  *	This program is free software: you can redistribute it and/or modify
@@ -12,14 +12,21 @@
  *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *	GNU General Public License for more details.
  */
+#ifndef STM32F4_IO_H
+#define STM32F4_IO_H
 
-volatile int n = 10;
+#include <stdint.h>
 
-int main() {
-	int s = 0;
+#define _IOREG(b, o)		(*(volatile uint32_t *)(b + o))
+#define _SIZE(u, l)			((u) - (l) + 1)
+#define _MASK(u, l)			(((1 << _SIZE(u, l)) - 1) << (l))
+#define _SET(x, u, l, v)	{ uint32_t xx = (x); xx &= ~_MASK(u, l); xx |= (v) << l; (x) = xx; }
+#define _GET(x, u, l)		(((x) & _MASK(u, l)) >> (l))
 
-	for(int i = 0; i < n; i++)
-		s += i;
-	
-	while(1);
-}
+#define MHZ			* 1000000
+#define SYSCLK		(168 MHZ)
+#define AHB_CLK		(168 MHZ)
+#define APB1_CLK	(42 MHZ)
+#define APB2_CLK	(84 MHZ)
+
+#endif	// STM32F4_IO_H
