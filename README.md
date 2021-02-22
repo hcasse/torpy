@@ -65,5 +65,9 @@ Working with GDB:
 * http://stm32f4-discovery.net/2015/01/properly-set-clock-speed-stm32f4xx-devices/
 * https://stm32f4-discovery.net/
 
-
+SWO:
+* https://stm32f4-discovery.net/2014/12/library-46-debug-stm32f4-device-swo-feature/
+* https://www.openstm32.org/forumthread1530
+* http://ehko.blog.free.fr/index.php?post/2017/09/SWD-Trace-avec-un-STM32
+* https://github.com/niekiran/Embedded-C/blob/master/All_source_codes/target/itm_send_data.c
 

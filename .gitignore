@@ -1,6 +1,9 @@
 *.o
 *.elf
 *.dis
+*.bin
 
 stlink-1.5.1/
 v1.5.1.tar.gz
+stm32f4.log
+tmp/

@@ -10,7 +10,8 @@ SOURCES = \
 OBJECTS = $(SOURCES:.c=.o)
 
 # compiler configuration
-ARCH=arm-linux-gnueabi-
+#ARCH=arm-linux-gnueabi-
+ARCH=arm-none-eabi-
 CC=$(ARCH)gcc
 OBJCOPY=$(ARCH)objcopy
 CFLAGS += -g3 -Wall -O2
@@ -20,7 +21,7 @@ CFLAGS += -mlittle-endian -mcpu=cortex-m4
 #-mfpu=fpv4-sp-d16
 CFLAGS += -I include
 #CFLAGS += -mthumb -mthumb-interwork
-LDFLAGS = -Tlink.ld -nostartfiles
+LDFLAGS = -Tlink.ld -nostartfiles -static
 
 
 
@@ -37,7 +38,8 @@ burn: proj
 	$(STLINK)/st-flash write $(APP).bin 0x80000000
 
 openocd:
-	openocd -f board/stm32f4discovery.cfg -f interface/stlink-v2-1.cfg
+	rm stm32f4.log
+	openocd -f openocd.cfg
 
 $(APP).dis: $(APP).elf
 	$(ARCH)objdump -D $< > $@

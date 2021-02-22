@@ -13,6 +13,7 @@
  *	GNU General Public License for more details.
  */
 
+#include <stm32f4/dbg.h>
 #include <stm32f4/gpio.h>
 #include <stm32f4/rcc.h>
 
@@ -20,6 +21,8 @@ volatile int n = 10;
 
 int main() {
 	int i;
+
+	ITM_puts("Hello, World!\n");
 
 	// set power
 	RCC_AHB1ENR |= 1 << ID_GPIOD;
@@ -37,6 +40,7 @@ int main() {
 		GPIO_BSRR_SET(LED_RED);
 		GPIO_BSRR_RESET(LED_BLUE);
 		GPIO_BSRR_RESET(LED_GREEN);
+		ITM_puts("ping\n");
 
 		for (i = 0; i < 6000000; i++)
 			__asm__("nop");
@@ -45,6 +49,7 @@ int main() {
 		GPIO_BSRR_RESET(LED_RED);
 		GPIO_BSRR_SET(LED_BLUE);
 		GPIO_BSRR_SET(LED_GREEN);
+		ITM_puts("pong\n");
 
 		for (i = 0; i < 6000000; i++)
 			__asm__("nop");
