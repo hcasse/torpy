@@ -41,9 +41,11 @@ And type:
 ### Usage
 
 Type:
+
 	$ openocd -f board/stm32f4discovery.cfg -f interface/stlink-v2-1.cfg
 
 Loading from OpenOCD:
+
 	$ telnet localhost 4444
 	> init
 	> reset init
@@ -52,6 +54,7 @@ Loading from OpenOCD:
 	> exit
 
 Working with GDB:
+
 	$ gdb PROGRAM.elf
 	(gdb) target remote localhost:3333
 	(gdb) monitor reset halt
