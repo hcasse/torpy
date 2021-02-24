@@ -6,23 +6,29 @@ STLINK_ROOT=stlink-1.5.1/build/Release
 APP=main
 SOURCES = \
 	startup.c \
-	main.c
+	main.c \
+	src/tinyprintf.c
 OBJECTS = $(SOURCES:.c=.o)
 
 # compiler configuration
-#ARCH=arm-linux-gnueabi-
 ARCH=arm-none-eabi-
+
 CC=$(ARCH)gcc
 OBJCOPY=$(ARCH)objcopy
 CFLAGS += -g3 -Wall -O2
-#-Tlink.ld
-CFLAGS += -mlittle-endian -mcpu=cortex-m4
-#CFLAGS += -mfloat-abi=hard
-#-mfpu=fpv4-sp-d16
-CFLAGS += -I include
-#CFLAGS += -mthumb -mthumb-interwork
-LDFLAGS = -Tlink.ld -nostartfiles -static
 
+CFLAGS += \
+	-Tlink.ld \
+	-mfloat-abi=hard \
+	-mlittle-endian \
+	-mcpu=cortex-m4 \
+	-mfpu=fpv4-sp-d16 \
+	-mthumb \
+	-I include
+LDFLAGS = \
+	-static \
+	-nostdinc -nostdlib \
+	-nostartfiles
 
 
 # rules
@@ -32,7 +38,7 @@ $(APP).elf: $(OBJECTS)
 	$(CC) $(CFLAGS) $(OBJECTS) -o $@ $(LDFLAGS)
 
 clean:
-	rm -f *.o $(APP).elf
+	rm -f $(OBJECTS) $(APP).elf
 
 burn: proj
 	$(STLINK)/st-flash write $(APP).bin 0x80000000

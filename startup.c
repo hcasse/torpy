@@ -15,10 +15,13 @@
 
 #include <stm32f4/dbg.h>
 #include <stm32f4/rcc.h>
+#include <tinyprintf.h>
 
 void handler_reset();
 void handler_default();
 void main();
+void tiny_putc(void *, char c);
+
 
 /*** linker script pointers ***/
 extern uint32_t _data_flash;
@@ -179,6 +182,7 @@ void handler_reset() {
 	RCC_CR &= ~RCC_CR_HSION;
 
 	// run main
+	init_printf(NULL, tiny_putc);
 	main();
 	while(1);
 }
@@ -187,7 +191,6 @@ void handler_reset() {
 void handler_default() {
 	while(1);
 }
-
 
 /**
  * Send character over ITM.
@@ -206,6 +209,13 @@ void ITM_putc(uint8_t ch) {
 
 	//Write to ITM stimulus port0
 	ITM_STIMULUS_PORT0 = ch;
+}
+
+/**
+ * Interface with tinyprintf.
+ */
+void tiny_putc(void *_, char c) {
+	ITM_putc(c);
 }
 
 

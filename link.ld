@@ -22,6 +22,10 @@ SECTIONS {
 	.data : AT(_data_flash)
 	{
 		_data_begin = .;
+		*(.init)
+		*(.init*)
+		*(.fini)
+		*(.fini*)
 		*(.data)
 		*(.data*)
 		. = ALIGN(4);

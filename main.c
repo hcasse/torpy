@@ -13,6 +13,8 @@
  *	GNU General Public License for more details.
  */
 
+#include <tinyprintf.h>
+
 #include <stm32f4/dbg.h>
 #include <stm32f4/gpio.h>
 #include <stm32f4/rcc.h>
@@ -20,7 +22,7 @@
 volatile int n = 10;
 
 int main() {
-	int i;
+	int i = 0;
 
 	ITM_puts("Hello, World!\n");
 
@@ -40,7 +42,7 @@ int main() {
 		GPIO_BSRR_SET(LED_RED);
 		GPIO_BSRR_RESET(LED_BLUE);
 		GPIO_BSRR_RESET(LED_GREEN);
-		ITM_puts("ping\n");
+		printf("ping %d\n", i);
 
 		for (i = 0; i < 6000000; i++)
 			__asm__("nop");
@@ -49,9 +51,10 @@ int main() {
 		GPIO_BSRR_RESET(LED_RED);
 		GPIO_BSRR_SET(LED_BLUE);
 		GPIO_BSRR_SET(LED_GREEN);
-		ITM_puts("pong\n");
+		printf("pong %d\n", i);
 
 		for (i = 0; i < 6000000; i++)
 			__asm__("nop");
+		i++;
 	}
 }

@@ -4,28 +4,20 @@ Only for board STM32F407.
 
 ## Dependencies
 
-For Linux, take a look here https://www.instructables.com/Start-Developing-STM32-on-Linux/ .
+The following dependencies are required:
+* GCC ARM compiler (preferred arm-none-eabi-)
+* openocd
+* make
+* gdb-multiarch
 
-* Install any GCC ARM compiler you want. Mine is:
-	PREFIX=arm-linux-gnueabi-
+These packages are already available in standatd Linux distribution.
+On Ubuntu-like distribution, you have to type:
 
-* Install st-link utility (use openocd instead)
-	$ wget https://github.com/stlink-org/stlink/archive/v1.5.1.tar.gz
-	$ tar xvf v1.5.1.tar.gz
-	$ sudo apt-get install build-essential libgtk-3-dev libgusb-dev
-	$ cd stlink-1.5.1
-	$ make
-
-
-
-## OpenOCD
-
-### Installation
-
-https://cycling-touring.net/2018/12/flashing-and-debugging-stm32-microcontrollers-under-linux
-
-To install:
 	$ sudo apt-get install openocd
+
+
+Depending on the GCC ARM compiler, you have to tune the Makefile:
+	PREFIX=arm-none-eabi-
 
 **Things below are not sure to be required (to check)**
 Add the file `/etc/udev/rules.d/99-openocd.rules`:
@@ -38,11 +30,22 @@ And type:
 **End of optional**
 
 
+## Building the system
+
+Just type:
+
+	$ make
+
+
+## Flashing, running and debugging
+
 ### Usage
 
-Type:
+In a separate shell, type:
 
-	$ openocd -f board/stm32f4discovery.cfg -f interface/stlink-v2-1.cfg
+	$ make openocd
+
+Openocd will run on its own and provide monitoring the STM32F4 board.
 
 Loading from OpenOCD:
 
@@ -62,11 +65,29 @@ Working with GDB:
 	(gdb) continue
 
 
+## ST-Link
+
+Install st-link utility:
+	$ wget https://github.com/stlink-org/stlink/archive/v1.5.1.tar.gz
+	$ tar xvf v1.5.1.tar.gz
+	$ sudo apt-get install build-essential libgtk-3-dev libgusb-dev
+	$ cd stlink-1.5.1
+	$ make
+
+It may be useful for instance to flash the ST-Link firmware.
+
+
+## contributors
+
+* thank you to CJlano for (tinyprintf)[https://github.com/cjlano/tinyprintf]
+
 ## References
 
 * https://embedds.com/
 * http://stm32f4-discovery.net/2015/01/properly-set-clock-speed-stm32f4xx-devices/
 * https://stm32f4-discovery.net/
+* https://www.instructables.com/Start-Developing-STM32-on-Linux/
+* https://cycling-touring.net/2018/12/flashing-and-debugging-stm32-microcontrollers-under-linux
 
 SWO:
 * https://stm32f4-discovery.net/2014/12/library-46-debug-stm32f4-device-swo-feature/
